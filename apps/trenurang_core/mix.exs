@@ -27,7 +27,6 @@ defmodule TrenurangCore.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.12"},
-      {:ecto_sqlite3, ">= 0.0.0"},
       {:postgrex, "~> 0.19"},
       {:geo_postgis, "~> 3.7"},
       {:oban, "~> 2.19"}
