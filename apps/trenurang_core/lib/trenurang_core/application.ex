@@ -10,6 +10,7 @@ defmodule TrenurangCore.Application do
     children = [
       # Starts a worker by calling: TrenurangCore.Worker.start_link(arg)
       # {TrenurangCore.Worker, arg}
+      TrenurangCore.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

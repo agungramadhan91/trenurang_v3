@@ -1,19 +1,12 @@
 defmodule TrenurangWorkers.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
-
   use Application
 
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: TrenurangWorkers.Worker.start_link(arg)
-      # {TrenurangWorkers.Worker, arg}
+      {Oban, Application.fetch_env!(:trenurang_core, Oban)}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: TrenurangWorkers.Supervisor]
     Supervisor.start_link(children, opts)
   end
