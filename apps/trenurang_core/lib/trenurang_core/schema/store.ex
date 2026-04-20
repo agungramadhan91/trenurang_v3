@@ -14,6 +14,9 @@ defmodule TrenurangCore.Schema.Store do
     has_one    :persona,   TrenurangCore.Schema.StorePersona
     has_many   :locations, TrenurangCore.Schema.StoreLocation
     has_many   :products,  TrenurangCore.Schema.Product
+    has_many   :order_codes,      TrenurangCore.Schema.StoreOrderCode
+    has_many   :rewards,          TrenurangCore.Schema.StoreReward
+    has_one    :store_trust_score, TrenurangCore.Schema.StoreTrustScore
 
     timestamps()
   end

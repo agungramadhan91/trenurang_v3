@@ -14,7 +14,7 @@ defmodule TrenurangCore.Schema.User do
     has_many :locations,        TrenurangCore.Schema.UserLocation
     has_many :stores,           TrenurangCore.Schema.Store, foreign_key: :owner_id
     has_many :channel_identities, TrenurangCore.Schema.ChannelIdentity
-    has_one  :trust_score,      TrenurangCore.Schema.TrustScore
+    has_one  :user_trust_score, TrenurangCore.Schema.UserTrustScore
     has_one  :session_state,    TrenurangCore.Schema.UserSessionState
 
     timestamps()
