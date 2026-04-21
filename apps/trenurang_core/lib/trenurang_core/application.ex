@@ -1,6 +1,4 @@
 defmodule TrenurangCore.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
@@ -8,13 +6,10 @@ defmodule TrenurangCore.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: TrenurangCore.Worker.start_link(arg)
-      # {TrenurangCore.Worker, arg}
-      TrenurangCore.Repo
+      TrenurangCore.Repo,
+      TrenurangCore.Session.ETSServer
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: TrenurangCore.Supervisor]
     Supervisor.start_link(children, opts)
   end
