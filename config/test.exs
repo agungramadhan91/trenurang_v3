@@ -2,7 +2,7 @@ import Config
 
 config :trenurang_core, TrenurangCore.Repo,
   username: "postgres",
-  password: "",
+  password: System.get_env("DB_PASSWORD", ""),
   hostname: "localhost",
   database: "trenurang_test",
   pool: Ecto.Adapters.SQL.Sandbox,
