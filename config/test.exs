@@ -5,6 +5,7 @@ config :trenurang_core, TrenurangCore.Repo,
   password: System.get_env("DB_PASSWORD", ""),
   hostname: "localhost",
   database: "trenurang_test",
+  types: TrenurangCore.PostgresTypes,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 

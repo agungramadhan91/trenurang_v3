@@ -112,9 +112,9 @@ defmodule TrenurangCore.Session.Hydrator do
   defp has_relation?(user_id) do
     Repo.exists?(
       from r in StoreRelation,
-        where:
-          (r.supplier_id == ^user_id or r.receiver_id == ^user_id) and
-            r.status == "active"
+        join: s in Store,
+          on: s.id == r.supplier_id or s.id == r.receiver_id,
+        where: s.owner_id == ^user_id
     )
   end
 

@@ -12,6 +12,7 @@ defmodule TrenurangCore.Session.ETSServer do
 
   @tables [
     :trenurang_sessions,
+    :trenurang_order_codes,
     :trenurang_user_trust_scores,
     :trenurang_store_trust_scores
   ]
