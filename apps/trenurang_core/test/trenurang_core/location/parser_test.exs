@@ -87,4 +87,35 @@ defmodule TrenurangCore.Location.ParserTest do
       assert {:error, :unsupported_format} = Parser.parse(nil)
     end
   end
+
+  describe "parse/1 — DMS coordinates" do
+    test "format standar S/E" do
+      assert {:ok, %{lat: lat, lng: lng}} =
+               Parser.parse("6°10'32\"S 106°49'32\"E")
+
+      assert_in_delta lat, -6.175, 0.01
+      assert_in_delta lng, 106.825, 0.01
+    end
+
+    test "format dengan d/m/s" do
+      assert {:ok, %{lat: lat, lng: lng}} =
+               Parser.parse("6d10m32sS 106d49m32sE")
+
+      assert_in_delta lat, -6.175, 0.01
+      assert_in_delta lng, 106.825, 0.01
+    end
+
+    test "koordinat utara N" do
+      # Sabang — paling utara Indonesia
+      assert {:ok, %{lat: lat, lng: _}} =
+               Parser.parse("5°53'0\"N 95°19'0\"E")
+
+      assert lat > 0
+    end
+
+    test "koordinat di luar Indonesia ditolak" do
+      assert {:error, :outside_indonesia} =
+               Parser.parse("48°51'30\"N 2°21'8\"E")
+    end
+  end
 end

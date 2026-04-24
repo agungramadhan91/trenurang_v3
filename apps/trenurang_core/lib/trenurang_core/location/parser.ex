@@ -36,6 +36,7 @@ defmodule TrenurangCore.Location.Parser do
 
     cond do
       google_maps_url?(input) -> parse_google_maps_url(input)
+      dms_string?(input) -> parse_dms(input)
       coordinate_string?(input) -> parse_coordinate_string(input)
       true -> parse_city_name(input)
     end
@@ -81,6 +82,36 @@ defmodule TrenurangCore.Location.Parser do
 
   defp coordinate_string?(input) do
     Regex.match?(~r/^-?\d+\.?\d*\s*[,\s]\s*-?\d+\.?\d*$/, input)
+  end
+
+  defp dms_string?(input) do
+    Regex.match?(~r/\d+[\x{00B0}d]\s*\d+['\x{2019}m]\s*\d+/u, input)
+  end
+
+  defp parse_dms(input) do
+    pattern =
+      ~r/(\d+)[\x{00B0}d]\s*(\d+)['\x{2019}m]\s*(\d+(?:\.\d+)?)["\x{201D}s]?\s*([NSns])[,\s]+(\d+)[\x{00B0}d]\s*(\d+)['\x{2019}m]\s*(\d+(?:\.\d+)?)["\x{201D}s]?\s*([EWew])/u
+
+    case Regex.run(pattern, input) do
+      [_, d1, m1, s1, dir1, d2, m2, s2, dir2] ->
+        lat = dms_to_decimal(d1, m1, s1, dir1)
+        lng = dms_to_decimal(d2, m2, s2, dir2)
+        validate({lat, lng})
+
+      nil ->
+        {:error, :invalid_coordinates}
+    end
+  end
+
+  defp dms_to_decimal(deg_str, min_str, sec_str, direction) do
+    deg = String.to_float(deg_str <> ".0")
+    min = String.to_float(min_str <> ".0")
+    sec = String.to_float(sec_str <> ".0")
+    decimal = deg + min / 60.0 + sec / 3600.0
+
+    if String.upcase(direction) in ["S", "W"],
+      do: -decimal,
+      else: decimal
   end
 
   # Parse "lat, lng" atau "lat lng"
