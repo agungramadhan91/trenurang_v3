@@ -40,4 +40,23 @@ defmodule TrenurangAdapter.ChannelIdentityRecorder do
       {:error, _} -> {:error, :not_found}
     end
   end
+
+  @doc "Upsert dan langsung return channel_identity — satu DB call."
+  @spec record_and_get(String.t()) :: {:ok, map()} | {:error, term()}
+  def record_and_get(channel_id) when is_binary(channel_id) do
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    %TrenurangCore.Schema.ChannelIdentity{}
+    |> TrenurangCore.Schema.ChannelIdentity.changeset(%{
+      channel: @channel,
+      channel_id: channel_id,
+      first_seen_at: now,
+      last_seen_at: now
+    })
+    |> TrenurangCore.Repo.insert(
+      on_conflict: [set: [last_seen_at: now, updated_at: now]],
+      conflict_target: [:channel, :channel_id],
+      returning: true
+    )
+  end
 end

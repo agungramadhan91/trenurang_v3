@@ -20,7 +20,9 @@ defmodule TrenurangCore.Gate.Checker do
     "/help",
     "/terms",
     "/settings",
-    "/market/browse"
+    "/market/browse",
+    "/register",           # tambah
+    "/register/confirm"    # tambah
   ]
 
   # L2 — routes yang butuh is_buyer

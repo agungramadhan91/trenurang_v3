@@ -16,7 +16,8 @@ defmodule TrenurangAdapter.GateChecker do
              | :requires_relation
              | :unknown_route
              | :invalid_session}
+
   def check(session, route) when is_map(session) and is_binary(route) do
-    Checker.check(session, route)
+    Checker.check(route, session)   # core: route dulu, session kedua
   end
 end

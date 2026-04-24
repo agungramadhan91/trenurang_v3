@@ -33,7 +33,14 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
   @spec handle(%Telegex.Type.Update{}) :: :ok
   def handle(%Telegex.Type.Update{} = update) do
     with {:ok, chat_id, raw_text} <- extract(update) do
-      process(chat_id, raw_text)
+      case ChannelIdentityRecorder.record_and_get(to_string(chat_id)) do
+        {:ok, ci} ->
+          continue_pipeline(ci, raw_text, chat_id)
+
+        {:error, _} ->
+          Logger.warning("[UpdateHandler] Gagal record channel_id=#{chat_id}")
+          :ok
+      end
     else
       {:error, :unsupported_update} ->
         Logger.debug("[UpdateHandler] Update diabaikan — bukan message/callback")
@@ -43,13 +50,13 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
 
   # ---- Private ----
 
-  defp process(chat_id, raw_text) do
-    # Step 1 — Record channel identity (selalu :ok, tidak pernah block)
-    :ok = ChannelIdentityRecorder.record(to_string(chat_id))
-
-    # Step 2 — Ambil channel_identity untuk cek user_id
-    {:ok, ci} = ChannelIdentityRecorder.get_identity(to_string(chat_id))
-
+  defp continue_pipeline(ci, raw_text, chat_id) do
+    case ChannelIdentityRecorder.record_and_get(to_string(chat_id)) do
+      {:ok, ci} -> continue_pipeline(ci, raw_text, chat_id)
+      {:error, _} ->
+        Logger.warning("[UpdateHandler] Gagal record channel_id=#{chat_id}")
+        :ok
+    end
     # Step 3 — Normalize input
     normalized = Normalizer.normalize(raw_text)
 
@@ -115,21 +122,27 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
     end
   end
 
-  defp normalized_to_route("start"),          do: "/start"
-  defp normalized_to_route("register"),       do: "/register"
-  defp normalized_to_route("home"),           do: "/home"
-  defp normalized_to_route("market/browse"),  do: "/market/browse"
-  defp normalized_to_route("market/find" <> rest), do: "/market/find" <> rest
-  defp normalized_to_route("store" <> rest),  do: "/store" <> rest
-  defp normalized_to_route("order" <> rest),  do: "/order" <> rest
-  defp normalized_to_route("cart" <> rest),   do: "/cart" <> rest
-  defp normalized_to_route("relation" <> rest), do: "/relation" <> rest
-  defp normalized_to_route("chat" <> rest),   do: "/chat" <> rest
-  defp normalized_to_route("dispute" <> rest), do: "/dispute" <> rest
-  defp normalized_to_route("terms"),          do: "/terms"
-  defp normalized_to_route("settings"),       do: "/settings"
-  defp normalized_to_route("help"),           do: "/help"
-  defp normalized_to_route(_),               do: "/unknown"
+  defp normalized_to_route("market/find" <> _), do: "/market/find"
+  defp normalized_to_route("cart" <> _),        do: "/cart"
+  defp normalized_to_route("order/walkin"),      do: "/order/walkin"
+  defp normalized_to_route("order" <> _),        do: "/order/create"
+  defp normalized_to_route("store/new"),         do: "/store/new"
+  defp normalized_to_route("store" <> _),        do: "/store/show"
+  defp normalized_to_route("relation" <> _),     do: "/relation/list"
+  defp normalized_to_route("chat/b2c" <> _),     do: "/chat/b2c"
+  defp normalized_to_route("chat/b2b" <> _),     do: "/chat/b2b"
+  defp normalized_to_route("chat/store" <> _),   do: "/chat/store"
+  defp normalized_to_route("chat/seller" <> _),  do: "/chat/seller"
+  defp normalized_to_route("dispute" <> _),      do: "/dispute/raise"
+  defp normalized_to_route("profile" <> _),      do: "/profile/show"
+  defp normalized_to_route("settings" <> _),     do: "/settings"
+  defp normalized_to_route("start"),             do: "/start"
+  defp normalized_to_route("register" <> _),     do: "/register"
+  defp normalized_to_route("home"),              do: "/home"
+  defp normalized_to_route("terms"),             do: "/terms"
+  defp normalized_to_route("help"),              do: "/help"
+  defp normalized_to_route("about"),             do: "/about"
+  defp normalized_to_route(_),                   do: "/unknown"
 
   defp extract(%Telegex.Type.Update{message: %{chat: %{id: chat_id}, text: text}})
        when not is_nil(text) do

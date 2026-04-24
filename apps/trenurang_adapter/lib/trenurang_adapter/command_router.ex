@@ -32,6 +32,7 @@ defmodule TrenurangAdapter.CommandRouter do
       "terms"          -> Handlers.TermsHandler.handle(session, chat_id)
       "settings"       -> Handlers.SettingsHandler.handle(:show, session, chat_id)
       "help"           -> Handlers.StartHandler.handle_help(session, chat_id)
+      "about"          -> Handlers.StartHandler.handle_about(session, chat_id)
       _other           -> {:unhandled, command}
     end
   end
