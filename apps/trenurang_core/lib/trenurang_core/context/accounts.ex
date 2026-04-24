@@ -60,6 +60,27 @@ defmodule TrenurangCore.Context.Accounts do
     end
   end
 
+  @doc """
+  Upsert channel_identity — insert saat pertama kali contact, update last_seen_at saat berikutnya.
+  Atomic via ON CONFLICT — aman untuk concurrent requests.
+  """
+  def upsert_channel_identity(channel, channel_id) when is_binary(channel) and is_binary(channel_id) do
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    %ChannelIdentity{}
+    |> ChannelIdentity.changeset(%{
+      channel: channel,
+      channel_id: channel_id,
+      first_seen_at: now,
+      last_seen_at: now
+    })
+    |> Repo.insert(
+      on_conflict: [set: [last_seen_at: now, updated_at: now]],
+      conflict_target: [:channel, :channel_id],
+      returning: true
+    )
+  end
+
   # ---- Channel Identity ----
 
   @doc "Link channel_identity ke user setelah registrasi selesai (Step 5)."
