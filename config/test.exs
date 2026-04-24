@@ -7,7 +7,8 @@ config :trenurang_core, TrenurangCore.Repo,
   database: "trenurang_test",
   types: TrenurangCore.PostgresTypes,
   pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  pool_size: 10,
+  log: false
 
 config :trenurang_adapter,
   telegram_bot_token: "test_token"
