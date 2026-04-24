@@ -12,4 +12,6 @@ if config_env() == :prod do
 
   config :trenurang_intelligence,
     groq_api_key: System.fetch_env!("GROQ_API_KEY")
+
+  config :telegex, token: System.fetch_env!("TELEGRAM_BOT_TOKEN")
 end

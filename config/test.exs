@@ -17,3 +17,5 @@ config :trenurang_intelligence,
   groq_api_key: "test_key"
 
 config :trenurang_core, Oban, testing: :inline
+
+config :telegex, token: "test_token_placeholder"
