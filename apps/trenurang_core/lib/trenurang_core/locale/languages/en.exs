@@ -121,6 +121,7 @@
   error_gate_l2: "This feature is only available to buyers who have placed an order.",
   error_gate_l3: "This feature is only available to sellers with an active store.",
   error_gate_l4: "This feature is only available to sellers with an active B2B relation.",
+  error_unknown_command: "Command not recognized. Type /help to see the list of available commands.",
   error_flow_interrupted:
     "You're currently in the *%{flow}* process.\n\nWould you like to continue or cancel?",
   error_flow_btn_continue: "▶️ Continue",

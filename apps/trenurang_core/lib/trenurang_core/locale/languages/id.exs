@@ -123,10 +123,12 @@
   error_gate_l2: "Fitur ini hanya untuk pembeli yang sudah pernah order.",
   error_gate_l3: "Fitur ini hanya untuk penjual yang punya toko aktif.",
   error_gate_l4: "Fitur ini hanya untuk penjual dengan relasi B2B aktif.",
+  error_unknown_command: "Perintah tidak dikenali. Ketik /help untuk melihat daftar perintah.",
   error_flow_interrupted:
     "Kamu sedang dalam proses *%{flow}*.\n\nMau lanjutkan atau batalkan?",
   error_flow_btn_continue: "▶️ Lanjutkan",
   error_flow_btn_cancel: "✖️ Batalkan",
+
 
   # --- About ---
   about_text:
