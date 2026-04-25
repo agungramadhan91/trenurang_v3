@@ -13,7 +13,13 @@ config :trenurang_core, TrenurangCore.Repo,
 config :trenurang_adapter,
   telegram_bot_token: "test_token"
 
+config :trenurang_adapter, work_mode: :polling
+
+config :trenurang_adapter, start_receiver: false
+
 config :trenurang_intelligence,
   groq_api_key: "test_key"
 
 config :trenurang_core, Oban, testing: :inline
+
+config :telegex, token: "test_token_placeholder"

@@ -13,5 +13,9 @@ config :trenurang_core, TrenurangCore.Repo,
 config :trenurang_adapter,
   telegram_bot_token: System.get_env("TELEGRAM_BOT_TOKEN", "")
 
+config :telegex, token: System.get_env("TELEGRAM_BOT_TOKEN", "")
+
 config :trenurang_intelligence,
   groq_api_key: System.get_env("GROQ_API_KEY", "")
+
+config :trenurang_adapter, work_mode: :polling

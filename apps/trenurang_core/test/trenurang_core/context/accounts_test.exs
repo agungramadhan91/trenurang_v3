@@ -243,4 +243,22 @@ defmodule TrenurangCore.Context.AccountsTest do
     user = insert_user()
     assert {:error, :not_found} = Accounts.link_channel_identity(999_999_999, user.id)
   end
+
+  describe "upsert_channel_identity/2" do
+    test "insert baru saat channel_id belum ada" do
+      assert {:ok, ci} = Accounts.upsert_channel_identity("telegram", "tg_99001")
+      assert ci.channel == "telegram"
+      assert ci.channel_id == "tg_99001"
+      assert is_nil(ci.user_id)
+    end
+
+    test "update last_seen_at saat channel_id sudah ada" do
+      {:ok, first} = Accounts.upsert_channel_identity("telegram", "tg_99002")
+      :timer.sleep(1000)
+      {:ok, second} = Accounts.upsert_channel_identity("telegram", "tg_99002")
+
+      assert second.id == first.id
+      assert DateTime.compare(second.last_seen_at, first.last_seen_at) == :gt
+    end
+  end
 end
