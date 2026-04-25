@@ -51,33 +51,42 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
   # ---- Private ----
 
   defp continue_pipeline(ci, raw_text, chat_id) do
-    case ChannelIdentityRecorder.record_and_get(to_string(chat_id)) do
-      {:ok, ci} -> continue_pipeline(ci, raw_text, chat_id)
-      {:error, _} ->
-        Logger.warning("[UpdateHandler] Gagal record channel_id=#{chat_id}")
-        :ok
-    end
     # Step 3 — Normalize input
     normalized = Normalizer.normalize(raw_text)
 
     # Step 4 — Hydrate session
-    session = case ci.user_id do
-      nil ->
-        # Guest — session minimal
-        %{active_flow: nil, is_registered: false, is_buyer: false,
-          has_store: false, has_relation: false, lang: :id}
+    session =
+      case ci.user_id do
+        nil ->
+          %{
+            active_flow: nil,
+            is_registered: false,
+            is_buyer: false,
+            has_store: false,
+            has_relation: false,
+            lang: :id
+          }
 
-      user_id ->
-        case SessionHydrator.hydrate(user_id) do
-          {:ok, s}              -> s
-          {:error, :not_found}  ->
-            %{active_flow: nil, is_registered: false, is_buyer: false,
-              has_store: false, has_relation: false, lang: :id}
-        end
-    end
+        user_id ->
+          case SessionHydrator.hydrate(user_id) do
+            {:ok, s} ->
+              s
+
+            {:error, :not_found} ->
+              %{
+                active_flow: nil,
+                is_registered: false,
+                is_buyer: false,
+                has_store: false,
+                has_relation: false,
+                lang: :id
+              }
+          end
+      end
 
     # Step 5 — Gate check
     route = normalized_to_route(normalized)
+
     case GateChecker.check(session, route) do
       :ok ->
         execute(session, normalized, chat_id)
