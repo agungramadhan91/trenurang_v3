@@ -104,6 +104,14 @@ defmodule TrenurangCore.Gate.CheckerTest do
     assert {:error, :requires_seller} = Checker.check("/store/walkin/record", l2_session())
   end
 
+  test "L3: /store/walkin/generate seller" do
+    assert :ok = Checker.check("/store/walkin/generate", l3_session())
+  end
+
+  test "L3: /store/walkin/generate bukan seller → requires_seller" do
+    assert {:error, :requires_seller} = Checker.check("/store/walkin/generate", l2_session())
+  end
+
   # Edge cases
   test "edge: route tidak dikenal" do
     assert {:error, :unknown_route} = Checker.check("/unknown/route", l4_session())
