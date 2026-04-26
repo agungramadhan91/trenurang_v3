@@ -80,4 +80,22 @@ defmodule TrenurangCore.LocaleTest do
       assert is_binary(Locale.t(:common_done, :en))
     end
   end
+
+  describe "error keys — wajib ada di :id dan :en" do
+    for key <- [:error_gate_l1, :error_gate_l2, :error_gate_l3, :error_gate_l4, :error_unknown_command] do
+      test "#{key} ada di :id dan non-empty" do
+        result = Locale.t(unquote(key), :id)
+        assert is_binary(result)
+        assert String.length(result) > 0
+        refute result == Atom.to_string(unquote(key)) |> String.replace("_", " ")
+      end
+
+      test "#{key} ada di :en dan non-empty" do
+        result = Locale.t(unquote(key), :en)
+        assert is_binary(result)
+        assert String.length(result) > 0
+        refute result == Atom.to_string(unquote(key)) |> String.replace("_", " ")
+      end
+    end
+  end
 end

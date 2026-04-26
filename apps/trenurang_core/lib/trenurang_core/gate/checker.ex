@@ -27,7 +27,6 @@ defmodule TrenurangCore.Gate.Checker do
 
   # L2 — routes yang butuh is_buyer
   @l2_routes [
-    "/market/find",
     "/cart",
     "/order/create",
     "/order/confirm",
@@ -44,6 +43,7 @@ defmodule TrenurangCore.Gate.Checker do
     "/store/products",
     "/store/orders/incoming",
     "/store/walkin/generate",
+    "/store/walkin/record",
     "/chat/store",
     "/chat/seller"
   ]
@@ -91,6 +91,7 @@ defmodule TrenurangCore.Gate.Checker do
   defp l1_route?(route) do
     route in [
       "/order/walkin",
+      "/market/find",
       "/profile/show",
       "/profile/edit",
       "/store/new",

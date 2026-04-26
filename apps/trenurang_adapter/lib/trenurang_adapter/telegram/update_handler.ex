@@ -28,6 +28,7 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
     ResponseFormatter
   }
   alias TrenurangAdapter.Telegram.Sender
+  alias TrenurangCore.Locale
 
   @doc "Entry point untuk setiap Telegram update."
   @spec handle(%Telegex.Type.Update{}) :: :ok
@@ -84,6 +85,8 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
           end
       end
 
+    lang = Map.get(session, :lang, :id)
+
     # Step 5 — Gate check
     route = normalized_to_route(normalized)
 
@@ -92,16 +95,16 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
         execute(session, normalized, chat_id)
 
       {:error, :requires_register} ->
-        Sender.send(ResponseFormatter.text(chat_id, "Silakan daftar dulu. Ketik /register"))
+        Sender.send(ResponseFormatter.text(chat_id, Locale.t(:error_gate_l1, lang)))
 
       {:error, :requires_buyer} ->
-        Sender.send(ResponseFormatter.text(chat_id, "Fitur ini untuk buyer. Buat order dulu."))
+        Sender.send(ResponseFormatter.text(chat_id, Locale.t(:error_gate_l2, lang)))
 
       {:error, :requires_seller} ->
-        Sender.send(ResponseFormatter.text(chat_id, "Fitur ini untuk seller. Buat toko dulu."))
+        Sender.send(ResponseFormatter.text(chat_id, Locale.t(:error_gate_l3, lang)))
 
       {:error, :requires_relation} ->
-        Sender.send(ResponseFormatter.text(chat_id, "Fitur ini untuk mitra B2B."))
+        Sender.send(ResponseFormatter.text(chat_id, Locale.t(:error_gate_l4, lang)))
 
       {:error, :unknown_route} ->
         execute(session, normalized, chat_id)
@@ -112,21 +115,20 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
   end
 
   defp execute(session, normalized, chat_id) do
+    lang = Map.get(session, :lang, :id)
     case FlowRouter.route(session, normalized) do
       {:command, cmd} ->
         case CommandRouter.dispatch(session, cmd, chat_id) do
           {:unhandled, _input} ->
-            Sender.send(ResponseFormatter.text(chat_id, "Perintah tidak dikenali. Ketik /help"))
+            Sender.send(ResponseFormatter.text(chat_id, Locale.t(:error_unknown_command, lang)))
           _ ->
             :ok
         end
 
       {:flow_step, _flow, _input} ->
-        # TODO Fase 6: teruskan ke flow handler
         :ok
 
       {:flow_free_text, _flow, _text} ->
-        # TODO Fase 7: kirim ke Intelligence classifier
         :ok
     end
   end
@@ -135,8 +137,10 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
   defp normalized_to_route("cart" <> _),        do: "/cart"
   defp normalized_to_route("order/walkin"),      do: "/order/walkin"
   defp normalized_to_route("order" <> _),        do: "/order/create"
-  defp normalized_to_route("store/new"),         do: "/store/new"
-  defp normalized_to_route("store" <> _),        do: "/store/show"
+  defp normalized_to_route("store/walkin/generate"), do: "/store/walkin/generate"
+  defp normalized_to_route("store/walkin/record"),   do: "/store/walkin/record"
+  defp normalized_to_route("store/new"),             do: "/store/new"
+  defp normalized_to_route("store" <> _),            do: "/store/show"
   defp normalized_to_route("relation" <> _),     do: "/relation/list"
   defp normalized_to_route("chat/b2c" <> _),     do: "/chat/b2c"
   defp normalized_to_route("chat/b2b" <> _),     do: "/chat/b2b"

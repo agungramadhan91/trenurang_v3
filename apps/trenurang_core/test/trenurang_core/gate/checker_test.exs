@@ -53,6 +53,18 @@ defmodule TrenurangCore.Gate.CheckerTest do
     assert :ok = Checker.check("/store/new", l1_session())
   end
 
+  test "L1: /market/find user registered — tidak butuh is_buyer" do
+    assert :ok = Checker.check("/market/find", l1_session())
+  end
+
+  test "L1: /market/find guest → requires_register" do
+    assert {:error, :requires_register} = Checker.check("/market/find", guest())
+  end
+
+  test "L1: /market/find tidak butuh is_buyer — l2_session juga ok" do
+    assert :ok = Checker.check("/market/find", l2_session())
+  end
+
   # L2 — harus buyer
   test "L2: /cart tanpa pernah order" do
     assert {:error, :requires_buyer} = Checker.check("/cart", l1_session())
@@ -82,6 +94,22 @@ defmodule TrenurangCore.Gate.CheckerTest do
 
   test "L4: /chat/b2b seller tanpa relasi" do
     assert {:error, :requires_relation} = Checker.check("/chat/b2b", l3_session())
+  end
+
+  test "L3: /store/walkin/record seller" do
+    assert :ok = Checker.check("/store/walkin/record", l3_session())
+  end
+
+  test "L3: /store/walkin/record bukan seller → requires_seller" do
+    assert {:error, :requires_seller} = Checker.check("/store/walkin/record", l2_session())
+  end
+
+  test "L3: /store/walkin/generate seller" do
+    assert :ok = Checker.check("/store/walkin/generate", l3_session())
+  end
+
+  test "L3: /store/walkin/generate bukan seller → requires_seller" do
+    assert {:error, :requires_seller} = Checker.check("/store/walkin/generate", l2_session())
   end
 
   # Edge cases
