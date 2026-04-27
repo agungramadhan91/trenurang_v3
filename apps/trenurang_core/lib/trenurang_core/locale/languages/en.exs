@@ -29,20 +29,26 @@
   # --- Register ---
   register_start:
     "Let's get you registered!\n\n*Step 1 of 5*\nWhat's your name? (full name or nickname)",
+  register_step1_name_invalid:
+    "Invalid name. Use 2–30 characters, max 3 words, no common words.",
   register_step2_username:
     "*Step 2 of 5*\nChoose a unique username.\nExample: `budi_jkt` or `warung_maju`\n_(Lowercase letters, numbers, or underscores only)_",
   register_step2_username_taken: "Username *%{username}* is already taken. Please try another.",
   register_step2_username_invalid:
     "Invalid username. Use lowercase letters, numbers, or underscores (3–30 characters).",
-  register_step3_location:
-    "*Step 3 of 5*\nShare your location so nearby markets can find you. 📍\n\nSend via Telegram location button or type your city/district name.",
-  register_step3_location_invalid:
+  register_step3_email:
+    "*Step 3 of 5*\nEnter your email (optional).\nUsed for billing notifications and important updates.",
+  register_step3_email_invalid:
+    "Invalid email format. Please try again or press Skip.",
+  register_step4_location:
+    "*Step 4 of 5*\nShare your location so nearby markets can find you. 📍\n\nSend via Telegram location button or type your city/district name.",
+  register_step4_location_invalid:
     "Location not recognized. Try sending via Telegram's location button or type your city name.",
-  register_step4_lang: "*Step 4 of 5*\nChoose your preferred language:",
   register_step5_confirm:
-    "*Step 5 of 5* — Review your details:\n\n👤 Name: *%{name}*\n🔖 Username: `%{username}`\n📍 Location: *%{location}*\n🌐 Language: *%{lang}*\n\nLooks good?",
+    "*Step 5 of 5* — Review your details:\n\n👤 Name: *%{name}*\n🔖 Username: `%{username}`\n📧 Email: *%{email}*\n📍 Location: *%{location}*\n\nLooks good?",
   register_btn_save: "✅ Save & Start",
   register_btn_restart: "🔄 Start Over",
+  register_btn_skip: "⏭️ Skip",
   register_success:
     "🎉 Welcome, *%{name}*!\n\nYour Trenurang account is active. You can now explore the market, create a store, or place an order.",
   register_interrupted:

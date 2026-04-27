@@ -30,21 +30,26 @@
   # --- Register ---
   register_start:
     "Oke, kita mulai pendaftaran!\n\n*Langkah 1 dari 5*\nSiapa namamu? (nama lengkap atau nama panggilan)",
+  register_step1_name_invalid:
+    "Nama tidak valid. Gunakan 2–30 karakter, maksimal 3 kata, bukan kata umum.",
   register_step2_username:
     "*Langkah 2 dari 5*\nPilih username unikmu.\nContoh: `budi_jkt` atau `warung_maju`\n_(Gunakan huruf kecil, angka, atau underscore)_",
   register_step2_username_taken: "Username *%{username}* sudah dipakai. Coba yang lain.",
   register_step2_username_invalid:
     "Username tidak valid. Gunakan huruf kecil, angka, atau underscore (3–30 karakter).",
-  register_step3_location:
-    "*Langkah 3 dari 5*\nBagikan lokasimu agar pasar terdekat bisa menemukanmu. 📍\n\nKirim lokasi via Telegram atau ketik nama kota/kecamatan.",
-  register_step3_location_invalid:
+  register_step3_email:
+    "*Langkah 3 dari 5*\nMasukkan email kamu (opsional).\nEmail digunakan untuk notifikasi tagihan dan info penting.",
+  register_step3_email_invalid:
+    "Format email tidak valid. Coba lagi atau tekan Lewati.",
+  register_step4_location:
+    "*Langkah 4 dari 5*\nBagikan lokasimu agar pasar terdekat bisa menemukanmu. 📍\n\nKirim lokasi via Telegram atau ketik nama kota/kecamatan.",
+  register_step4_location_invalid:
     "Lokasi tidak dikenali. Coba kirim via tombol lokasi Telegram atau ketik nama kota.",
-  register_step4_lang:
-    "*Langkah 4 dari 5*\nPilih bahasa yang kamu inginkan:",
   register_step5_confirm:
-    "*Langkah 5 dari 5* — Konfirmasi data kamu:\n\n👤 Nama: *%{name}*\n🔖 Username: `%{username}`\n📍 Lokasi: *%{location}*\n🌐 Bahasa: *%{lang}*\n\nSudah benar?",
+    "*Langkah 5 dari 5* — Konfirmasi data kamu:\n\n👤 Nama: *%{name}*\n🔖 Username: `%{username}`\n📧 Email: *%{email}*\n📍 Lokasi: *%{location}*\n\nSudah benar?",
   register_btn_save: "✅ Simpan & Mulai",
   register_btn_restart: "🔄 Ulang dari Awal",
+  register_btn_skip: "⏭️ Lewati",
   register_success:
     "🎉 Selamat datang, *%{name}*!\n\nAkun Trenurang kamu sudah aktif. Sekarang kamu bisa jelajahi pasar, buat toko, atau langsung order.",
   register_interrupted:
