@@ -4,6 +4,7 @@ defmodule TrenurangAdapter.Telegram.Sender do
 
   Menerima tuple dari ResponseFormatter dan mengeksekusi API call.
   Error dari Telegex di-log tapi tidak crash pipeline.
+  Di test mode (:test_mode true), skip HTTP call.
   """
 
   require Logger
@@ -17,13 +18,17 @@ defmodule TrenurangAdapter.Telegram.Sender do
   @doc "Kirim pesan teks langsung (bypass formatter)."
   @spec send_text(integer(), String.t(), keyword()) :: :ok
   def send_text(chat_id, text, opts \\ []) do
-    case Telegex.send_message(chat_id, text, opts) do
-      {:ok, _msg} ->
-        :ok
+    if Application.get_env(:trenurang_adapter, :test_mode, false) do
+      :ok
+    else
+      case Telegex.send_message(chat_id, text, opts) do
+        {:ok, _msg} ->
+          :ok
 
-      {:error, reason} ->
-        Logger.warning("[Sender] Gagal kirim ke chat_id=#{chat_id}: #{inspect(reason)}")
-        :ok
+        {:error, reason} ->
+          Logger.warning("[Sender] Gagal kirim ke chat_id=#{chat_id}: #{inspect(reason)}")
+          :ok
+      end
     end
   end
 end

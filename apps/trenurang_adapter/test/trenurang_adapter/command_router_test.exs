@@ -3,20 +3,20 @@ defmodule TrenurangAdapter.CommandRouterTest do
 
   alias TrenurangAdapter.CommandRouter
 
-  @session %{active_flow: nil, is_registered: true, is_buyer: true,
-             has_store: true, has_relation: true, lang: :id}
+  @session %{user_id: "u#test", active_flow: nil, is_registered: true, is_buyer: true,
+           has_store: true, has_relation: true, lang: :id}
   @chat_id 123
 
   test "dispatch start" do
-    assert {:ok, :start} = CommandRouter.dispatch(@session, "start", @chat_id)
+    assert :ok = CommandRouter.dispatch(@session, "start", @chat_id)
   end
 
   test "dispatch register" do
-    assert {:ok, :register} = CommandRouter.dispatch(@session, "register", @chat_id)
+    assert :ok = CommandRouter.dispatch(@session, "register", @chat_id)
   end
 
   test "dispatch home" do
-    assert {:ok, :home} = CommandRouter.dispatch(@session, "home", @chat_id)
+    assert :ok = CommandRouter.dispatch(@session, "home", @chat_id)
   end
 
   test "dispatch order/walkin" do

@@ -23,3 +23,5 @@ config :trenurang_intelligence,
 config :trenurang_core, Oban, testing: :inline
 
 config :telegex, token: "test_token_placeholder"
+
+config :trenurang_adapter, :test_mode, true
