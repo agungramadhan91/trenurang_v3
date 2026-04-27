@@ -41,6 +41,8 @@ defmodule TrenurangAdapter.Telegram.WebhookReceiver do
 
   @impl true
   def on_update(update) do
+    require Logger
+    Logger.info("[RECEIVER] update masuk: #{inspect(update, limit: 5)}")
     TrenurangAdapter.Telegram.UpdateHandler.handle(update)
     :ok
   end

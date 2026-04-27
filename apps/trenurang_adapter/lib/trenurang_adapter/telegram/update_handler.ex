@@ -36,6 +36,7 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
   @spec handle(%Telegex.Type.Update{}) :: :ok
   def handle(%Telegex.Type.Update{} = update) do
     with {:ok, chat_id, raw_text} <- extract(update) do
+      Logger.info("[IN] chat_id=#{chat_id} text=#{inspect(raw_text)}")
       case ChannelIdentityRecorder.record_and_get(to_string(chat_id)) do
         {:ok, ci} ->
           continue_pipeline(ci, raw_text, chat_id)
@@ -46,7 +47,7 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
       end
     else
       {:error, :unsupported_update} ->
-        Logger.debug("[UpdateHandler] Update diabaikan — bukan message/callback/lokasi")
+        Logger.info("[UpdateHandler] extract gagal — update diabaikan")
         :ok
     end
   end
@@ -55,6 +56,7 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
 
   defp continue_pipeline(ci, raw_text, chat_id) do
     normalized = Normalizer.normalize(raw_text)
+    Logger.debug("[PIPELINE] normalized=#{inspect(normalized)} user_id=#{inspect(ci.user_id)}")
 
     session =
       case ci.user_id do
@@ -137,6 +139,7 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
 
     case FlowRouter.route(session, normalized) do
       {:command, cmd} ->
+        Logger.info("[DISPATCH] cmd=#{inspect(cmd)} registered=#{session.is_registered}")
         case CommandRouter.dispatch(session, cmd, chat_id) do
           {:unhandled, _input} ->
             Sender.send(ResponseFormatter.text(chat_id, Locale.t(:error_unknown_command, lang)))
@@ -146,9 +149,11 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
         end
 
       {:flow_step, flow, input} ->
+        Logger.info("[FLOW] flow=#{inspect(flow.flow)} step=#{flow.step} input=#{inspect(input)}")
         FlowDispatcher.dispatch(session, flow, input, chat_id)
 
       {:flow_free_text, flow, text} ->
+        Logger.info("[FLOW_TEXT] flow=#{inspect(flow.flow)} step=#{flow.step} text=#{inspect(text)}")
         FlowDispatcher.dispatch(session, flow, text, chat_id)
     end
   end
