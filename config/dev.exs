@@ -8,7 +8,8 @@ config :trenurang_core, TrenurangCore.Repo,
   types: TrenurangCore.PostgresTypes,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  log: false
 
 config :trenurang_adapter,
   telegram_bot_token: System.get_env("TELEGRAM_BOT_TOKEN", "")

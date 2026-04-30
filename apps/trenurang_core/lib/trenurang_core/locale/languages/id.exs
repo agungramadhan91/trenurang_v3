@@ -16,6 +16,7 @@
   common_confirm: "Konfirmasi",
   common_skip: "Lewati",
   common_or: "atau",
+  common_coming_soon: "🚧 Fitur ini sedang kami siapkan. Nantikan ya!",
 
   # --- Start & Welcome ---
   start_welcome_new:

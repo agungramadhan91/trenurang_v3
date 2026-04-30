@@ -16,6 +16,7 @@
   common_confirm: "Confirm",
   common_skip: "Skip",
   common_or: "or",
+  common_coming_soon: "🚧 This feature is coming soon. Stay tuned!",
 
   # --- Start & Welcome ---
   start_welcome_new:

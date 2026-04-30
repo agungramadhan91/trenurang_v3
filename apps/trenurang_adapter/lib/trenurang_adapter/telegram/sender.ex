@@ -8,6 +8,7 @@ defmodule TrenurangAdapter.Telegram.Sender do
   """
 
   require Logger
+  alias TrenurangAdapter.TranscriptLogger
 
   @doc "Kirim hasil format dari ResponseFormatter."
   @spec send({:text, integer(), String.t(), keyword()}) :: :ok
@@ -23,6 +24,7 @@ defmodule TrenurangAdapter.Telegram.Sender do
     else
       case Telegex.send_message(chat_id, text, opts) do
         {:ok, _msg} ->
+          TranscriptLogger.log_out(chat_id, text, opts)
           :ok
 
         {:error, reason} ->

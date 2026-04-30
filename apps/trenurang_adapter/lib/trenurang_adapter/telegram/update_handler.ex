@@ -26,7 +26,8 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
     FlowRouter,
     FlowDispatcher,
     CommandRouter,
-    ResponseFormatter
+    ResponseFormatter,
+    TranscriptLogger
   }
   alias TrenurangAdapter.Telegram.Sender
   alias TrenurangCore.Locale
@@ -36,7 +37,8 @@ defmodule TrenurangAdapter.Telegram.UpdateHandler do
   @spec handle(%Telegex.Type.Update{}) :: :ok
   def handle(%Telegex.Type.Update{} = update) do
     with {:ok, chat_id, raw_text} <- extract(update) do
-      Logger.info("[IN] chat_id=#{chat_id} text=#{inspect(raw_text)}")
+      TranscriptLogger.log_in(chat_id, raw_text)
+
       case ChannelIdentityRecorder.record_and_get(to_string(chat_id)) do
         {:ok, ci} ->
           continue_pipeline(ci, raw_text, chat_id)
